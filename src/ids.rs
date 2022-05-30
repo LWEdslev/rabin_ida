@@ -1,7 +1,6 @@
 //! Information Dispersal Algorithms
 use crate::{
-    share::{RabinShare, ShareVec},
-    Sharing,
+    share::{RabinShare},
 };
 use gf::{Field, GF};
 
@@ -9,15 +8,18 @@ use gf::{Field, GF};
 /// # Rabin Information Dispersal
 /// 
 /// ```rust
-/// use sharing::{RabinInformationDispersal, Sharing};
+/// use sharing::RabinInformationDispersal;
 /// 
-/// let data = [1, 2, 3, 4, 5].to_vec();
+/// let data = [1, 2, 3, 4, 5, 6, 7, 8].to_vec();
 /// 
-/// let sharer = RabinInformationDispersal::new(5, 3);
+/// let n = 8;
+/// let k = 6;
+/// let sharer = RabinInformationDispersal::new(n, k);
 ///
-/// let shares = sharer.share(data.clone()).unwrap();
+/// let shares = sharer.share(data.clone());
+/// dbg!(shares.clone());
 /// // You only need 3 out of the 5 shares to reconstruct
-/// let rec = sharer.recontruct(shares[1..=3].to_vec()).unwrap();
+/// let rec = sharer.recontruct(shares[1..=k as usize].to_vec()).unwrap();
 ///
 /// assert_eq!(data, rec);
 /// ```
@@ -32,11 +34,9 @@ impl RabinInformationDispersal {
     }
 }
 
-impl Sharing for RabinInformationDispersal {
-    type Share = RabinShare;
-    fn share(&self, data: Vec<u8>) -> Option<Vec<Self::Share>> {
+impl RabinInformationDispersal {
+    pub fn share(&self, data: Vec<u8>) -> Vec<RabinShare> {
         let length = data.len();
-        Some(
             (1..=self.n)
                 .map(|x| {
                     let gx = GF(x);
@@ -54,22 +54,21 @@ impl Sharing for RabinInformationDispersal {
                             })
                             .collect(),
                     }
-                })
-                .collect(),
-        )
+                }).collect()
     }
 
-    fn recontruct(&self, shares: Vec<Self::Share>) -> Option<Vec<u8>> {
+    pub fn recontruct(&self, shares: Vec<RabinShare>) -> Option<Vec<u8>> {
+        dbg!(shares.clone());
         if shares.len() < self.k as usize {
             return None;
         }
         let xvalues = shares.iter().map(|x| x.id).collect();
         let decoder = generate_decoder(self.k as usize, xvalues);
-        let mut secret = vec![0u8; shares.size()];
+        let mut secret = vec![0u8; shares[0].length];
         for i in 0..shares[0].body.len() {
             for j in 0..self.k as usize {
                 let index = (i * self.k as usize) + j;
-                if index >= shares.size() { continue; }
+                if index >= shares[0].length { continue; }
                 secret[index] = (0..self.k as usize)
                     .map(|x| GF(decoder[j][x]) * GF(shares[x].body[i]))
                     .sum::<GF<u8>>()
