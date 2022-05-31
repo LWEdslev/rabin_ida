@@ -1,6 +1,6 @@
 //! Information Dispersal Algorithms
 use crate::rabin_share::RabinShare;
-use gf::{Field, GF};
+use crate::gf::{Field, GF};
 
 
 /// # Rabin Information Dispersal

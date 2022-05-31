@@ -3,6 +3,7 @@
 pub mod ida;
 
 mod rabin_share;
+mod gf;
 
 #[doc(inline)]
 pub use crate::ida::RabinIDA;
