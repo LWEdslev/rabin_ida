@@ -1,40 +1,38 @@
 //! Information Dispersal Algorithms
-use crate::{
-    share::{RabinShare},
-};
+use crate::rabin_share::RabinShare;
 use gf::{Field, GF};
 
 
 /// # Rabin Information Dispersal
 /// 
 /// ```rust
-/// use sharing::RabinInformationDispersal;
+/// use rabin_ida::RabinIDA;
 /// 
-/// let data = [1, 2, 3, 4, 5, 6, 7, 8].to_vec();
+/// let data = [1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 11, 11, 11, 12, 13, 122].to_vec();
 /// 
-/// let n = 8;
-/// let k = 6;
-/// let sharer = RabinInformationDispersal::new(n, k);
+/// let n = 255;
+/// let k = 100;
+/// let sharer = RabinIDA::new(n, k);
 ///
 /// let shares = sharer.share(data.clone());
 /// dbg!(shares.clone());
-/// // You only need 3 out of the 5 shares to reconstruct
-/// let rec = sharer.recontruct(shares[1..=k as usize].to_vec()).unwrap();
+/// // You only need k out of the n shares to reconstruct
+/// let rec = sharer.reconstruct(shares[1..=k as usize].to_vec()).unwrap();
 ///
 /// assert_eq!(data, rec);
 /// ```
-pub struct RabinInformationDispersal {
+pub struct RabinIDA {
     n: u8,
     k: u8,
 }
 
-impl RabinInformationDispersal {
+impl RabinIDA {
     pub fn new(n: u8, k: u8) -> Self {
         Self { n, k }
     }
 }
 
-impl RabinInformationDispersal {
+impl RabinIDA {
     pub fn share(&self, data: Vec<u8>) -> Vec<RabinShare> {
         let length = data.len();
             (1..=self.n)
@@ -57,8 +55,7 @@ impl RabinInformationDispersal {
                 }).collect()
     }
 
-    pub fn recontruct(&self, shares: Vec<RabinShare>) -> Option<Vec<u8>> {
-        dbg!(shares.clone());
+    pub fn reconstruct(&self, shares: Vec<RabinShare>) -> Option<Vec<u8>> {
         if shares.len() < self.k as usize {
             return None;
         }
@@ -88,8 +85,8 @@ fn generate_decoder(size: usize, values: Vec<u8>) -> Vec<Vec<u8>> {
 }
 
 fn two_mut<T>(sl: &mut [T], i: usize, j: usize) -> (&mut T, &mut T) {
-    let (smaller, lagger) = if i < j { (i, j) } else { (j, i) };
-    let (smsl, lgsl) = sl.split_at_mut(lagger);
+    let (smaller, larger) = if i < j { (i, j) } else { (j, i) };
+    let (smsl, lgsl) = sl.split_at_mut(larger);
     if i == smaller {
         (&mut smsl[smaller], &mut lgsl[0])
     } else {
