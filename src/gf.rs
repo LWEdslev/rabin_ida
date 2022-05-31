@@ -3,7 +3,7 @@
 //! finite field arithmetic
 //!
 //! ```
-//! use gf::GF;
+//! use crate::gf::GF;
 //!
 //! let x = GF(123u8);
 //! let y = GF(225u8);
@@ -70,7 +70,7 @@ pub trait Field:
 /// # The Golias Field Type.
 ///
 /// ```
-/// use gf::{GF, GF256};
+/// use crate::gf::{GF, GF256};
 ///
 /// let val = GF(4);
 ///
