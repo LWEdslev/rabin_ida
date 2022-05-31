@@ -3,7 +3,7 @@
 //! finite field arithmetic
 //!
 //! ```
-//! use crate::gf::GF;
+//! use rabin_ida::gf::GF;
 //!
 //! let x = GF(123u8);
 //! let y = GF(225u8);
@@ -68,18 +68,8 @@ pub trait Field:
 }
 
 /// # The Golias Field Type.
-///
-/// ```
-/// use crate::gf::{GF, GF256};
-///
-/// let val = GF(4);
-///
-/// let typed_val1 = GF(5u8);
-/// let typed_val2 = GF256::new(5);
-/// assert_eq!(typed_val1, typed_val2)
-/// ```
-///
 /// Supports all basic Mathemtaical Functions
+/// 
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub struct GF<T>(pub T);
 
