@@ -141,25 +141,6 @@ fn normalize_row(tmp_row: &mut [u8], res_row: &mut [u8], element: u8) {
     }
 }
 
-// fn find_and_swap_nonzero_in_row(
-//     i: usize,
-//     num_rows: usize,
-//     tmp: &mut Vec<Vec<u8>>,
-//     res: &mut Vec<Vec<u8>>,
-// ) -> bool {
-//     for j in i + 1..num_rows {
-//         if tmp[j][i] != 0 {
-//             swap_rows(tmp, i, j);
-//             swap_rows(res, i, j);
-//             return true;
-//         }
-//     }
-//     false
-// }
-
-// fn swap_rows(matrix: &mut Vec<Vec<u8>>, first: usize, second: usize) {
-//     matrix.swap(first, second);
-// }
 
 fn generate_identity(size: usize) -> Vec<Vec<u8>> {
     (0..size)
