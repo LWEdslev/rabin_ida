@@ -2,13 +2,6 @@
 //!
 //! finite field arithmetic
 //!
-//! ```
-//! use rabin_ida::gf::GF;
-//!
-//! let x = GF(123u8);
-//! let y = GF(225u8);
-//! println!("{}", x + y);
-//! ```
 
 use core::{
     fmt::{self, Debug, Display, Formatter},
