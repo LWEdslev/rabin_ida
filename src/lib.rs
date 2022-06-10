@@ -17,8 +17,8 @@ mod tests {
     use test_strategy::proptest;
 
     #[proptest]
-    fn test_up_to_5_mb(
-        #[any(size_range(0..1024*5).lift())] data: Vec<u8>,
+    fn test_up_to_1_mb(
+        #[any(size_range(0..1024).lift())] data: Vec<u8>,
         #[strategy(2..255u8)] n: u8,
         #[strategy(1..#n)] k: u8,
     ) {
