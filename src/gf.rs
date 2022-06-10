@@ -62,7 +62,7 @@ pub trait Field:
 
 /// # The Golias Field Type.
 /// Supports all basic Mathemtaical Functions
-/// 
+///
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub struct GF<T>(pub T);
 
@@ -323,7 +323,7 @@ mod tests {
 
     #[test]
     fn conv() {
-        assert_eq!(GF::from(34u8),  GF(34u8));
+        assert_eq!(GF::from(34u8), GF(34u8));
         let x: u8 = GF(34u8).into();
         assert!(x == 34);
     }

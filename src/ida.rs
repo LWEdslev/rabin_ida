@@ -1,15 +1,14 @@
 //! Information Dispersal Algorithms
-use crate::rabin_share::RabinShare;
 use crate::gf::{Field, GF};
-
+use crate::rabin_share::RabinShare;
 
 /// # Rabin Information Dispersal
-/// 
+///
 /// ```rust
 /// use rabin_ida::RabinIDA;
-/// 
+///
 /// let data = [1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 11, 11, 11, 12, 13, 122].to_vec();
-/// 
+///
 /// let n = 255;
 /// let k = 100;
 /// let sharer = RabinIDA::new(n, k);
@@ -35,24 +34,25 @@ impl RabinIDA {
 impl RabinIDA {
     pub fn share(&self, data: Vec<u8>) -> Vec<RabinShare> {
         let length = data.len();
-            (1..=self.n)
-                .map(|x| {
-                    let gx = GF(x);
-                    RabinShare {
-                        id: x,
-                        length,
-                        body: data
-                            .chunks(self.k as usize)
-                            .map(|chunk| {
-                                chunk
-                                    .into_iter()
-                                    .rev()
-                                    .fold(GF::zero(), |res, b| GF(*b) + gx * res)
-                                    .into()
-                            })
-                            .collect(),
-                    }
-                }).collect()
+        (1..=self.n)
+            .map(|x| {
+                let gx = GF(x);
+                RabinShare {
+                    id: x,
+                    length,
+                    body: data
+                        .chunks(self.k as usize)
+                        .map(|chunk| {
+                            chunk
+                                .into_iter()
+                                .rev()
+                                .fold(GF::zero(), |res, b| GF(*b) + gx * res)
+                                .into()
+                        })
+                        .collect(),
+                }
+            })
+            .collect()
     }
 
     pub fn reconstruct(&self, shares: Vec<RabinShare>) -> Option<Vec<u8>> {
@@ -65,7 +65,9 @@ impl RabinIDA {
         for i in 0..shares[0].body.len() {
             for j in 0..self.k as usize {
                 let index = (i * self.k as usize) + j;
-                if index >= shares[0].length { continue; }
+                if index >= shares[0].length {
+                    continue;
+                }
                 secret[index] = (0..self.k as usize)
                     .map(|x| GF(decoder[j][x]) * GF(shares[x].body[i]))
                     .sum::<GF<u8>>()
@@ -140,7 +142,6 @@ fn normalize_row(tmp_row: &mut [u8], res_row: &mut [u8], element: u8) {
         res_row[i] = (GF(res_row[i]) * GF(element)).into();
     }
 }
-
 
 fn generate_identity(size: usize) -> Vec<Vec<u8>> {
     (0..size)
