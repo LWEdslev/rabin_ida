@@ -1,6 +1,6 @@
 [package]
 name = "rabin_ida"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2018"
 authors = ["David Irvine <david.irvine@maidsafe.net>, Liam Perlaki <lperlaki@icloud.com>"]
 repository = "https://github.com/dirvine/rabin_ida"
