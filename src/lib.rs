@@ -13,7 +13,7 @@ mod tests {
 
     use crate::ida::RabinIDA;
     use proptest::collection::size_range;
-    use rand::{thread_rng, prelude::SliceRandom};
+    use rand::{prelude::SliceRandom, thread_rng};
     use test_strategy::proptest;
 
     #[proptest]

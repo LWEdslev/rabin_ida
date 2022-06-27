@@ -33,26 +33,27 @@ impl RabinIDA {
 
 impl RabinIDA {
     pub fn share(&self, data: Vec<u8>) -> Vec<RabinShare> {
-        let length = data.len();
         (1..=self.n)
-            .map(|x| {
-                let gx = GF(x);
-                RabinShare {
-                    id: x,
-                    length,
-                    body: data
-                        .chunks(self.k as usize)
-                        .map(|chunk| {
-                            chunk
-                                .into_iter()
-                                .rev()
-                                .fold(GF::zero(), |res, b| GF(*b) + gx * res)
-                                .into()
-                        })
-                        .collect(),
-                }
-            })
+            .map(|x| self.share_at_index(&data, x))
             .collect()
+    }
+
+    pub fn share_at_index(&self, data: &Vec<u8>, index: u8) -> RabinShare {
+        let gx = GF(index);
+        RabinShare {
+            id: index,
+            length: data.len(),
+            body: data
+                .chunks(self.k as usize)
+                .map(|chunk| {
+                    chunk
+                        .into_iter()
+                        .rev()
+                        .fold(GF::zero(), |res, b| GF(*b) + gx * res)
+                        .into()
+                })
+                .collect(),
+        }
     }
 
     pub fn reconstruct(&self, shares: Vec<RabinShare>) -> Option<Vec<u8>> {
