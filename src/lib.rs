@@ -22,7 +22,7 @@
 pub mod ida;
 
 mod gf;
-mod rabin_share;
+pub mod rabin_share;
 
 #[doc(inline)]
 pub use crate::ida::RabinIDA;
